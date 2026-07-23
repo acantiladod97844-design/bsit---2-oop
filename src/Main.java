@@ -1,113 +1,107 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
 
-public class Main {
-    static Scanner sc = new Scanner(System.in);
-    static ArrayList<Student> students = new ArrayList<>();
-    static ArrayList<Course> courses = new ArrayList<>();
-    static HashMap<String, ArrayList<String>> enroll = new HashMap<>();
-
+public class EnrollmentApp {
     public static void main(String[] args) {
-        int ch;
-        do {
-            System.out.println("\n1.Register\n2.Add Course\n3.Enroll\n4.Students\n5.Courses\n6.Student Load\n0.Exit");
-            ch = Integer.parseInt(sc.nextLine());
+        Scanner sc = new Scanner(System.in);
 
-            switch (ch) {
+        ArrayList<Student> students = new ArrayList<>();
+        ArrayList<Course> courses = new ArrayList<>();
+        HashMap<String, ArrayList<String>> enrollments = new HashMap<>();
+
+        int choice;
+
+        do {
+            System.out.println("LICEO ENROLLMENT SYSTEM");
+            System.out.println("1. Register Student");
+            System.out.println("2. Add Course");
+            System.out.println("3. Enroll Student");
+            System.out.println("4. View Students");
+            System.out.println("5. View Courses");
+            System.out.println("6. View Enrollments");
+            System.out.println("7. Exit");
+            System.out.print("Choice: ");
+            choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
                 case 1:
-                    System.out.print("ID: ");
+                    System.out.print("Student ID: ");
                     String id = sc.nextLine();
-                    System.out.print("Name: ");
+
+                    System.out.print("Student Name: ");
                     String name = sc.nextLine();
-                    System.out.print("Program(BSIT/BSCS): ");
-                    String prog = sc.nextLine().toUpperCase();
-                    System.out.print("Year: ");
-                    int year = Integer.parseInt(sc.nextLine());
-                    students.add(new Student(id, name, prog, year));
-                    System.out.println("Registered!");
+
+                    students.add(new Student(id, name));
+                    enrollments.put(id, new ArrayList<>());
+                    System.out.println("Student Registered");
                     break;
 
                 case 2:
-                    System.out.print("Code: ");
+                    System.out.print("Course Code: ");
                     String code = sc.nextLine();
-                    System.out.print("Title: ");
-                    String title = sc.nextLine();
-                    System.out.print("Units: ");
-                    int units = Integer.parseInt(sc.nextLine());
-                    System.out.print("Capacity: ");
-                    int cap = Integer.parseInt(sc.nextLine());
-                    courses.add(new Course(code, title, units, cap));
-                    System.out.println("Course Added!");
+
+                    System.out.print("Course Name: ");
+                    String cname = sc.nextLine();
+
+                    courses.add(new Course(code, cname));
+                    System.out.println("Course Added");
                     break;
 
                 case 3:
                     System.out.print("Student ID: ");
                     String sid = sc.nextLine();
+
                     System.out.print("Course Code: ");
-                    String cc = sc.nextLine();
+                    String ccode = sc.nextLine();
 
-                    Student s = findStudent(sid);
-                    Course c = findCourse(cc);
-
-                    if (s == null || c == null) {
-                        System.out.println("Student/Course Not Found!");
-                        break;
+                    if (enrollments.containsKey(sid)) {
+                        enrollments.get(sid).add(ccode);
+                        System.out.println("Enrollment Successful");
+                    } else {
+                        System.out.println("Student Not Found");
                     }
-                    if (c.isFull()) {
-                        System.out.println("Course Full!");
-                        break;
-                    }
-
-                    enroll.putIfAbsent(sid, new ArrayList<>());
-                    if (!enroll.get(sid).contains(cc)) {
-                        enroll.get(sid).add(cc);
-                        c.addOneEnrollee();
-                        System.out.println("Enrolled!");
-                    } else
-                        System.out.println("Already Enrolled!");
                     break;
 
                 case 4:
-                    for (Student st : students)
-                        System.out.println(st.describe());
+                    for (Student s : students) {
+                        System.out.println(s.getId() + " - " + s.getName());
+                    }
                     break;
 
                 case 5:
-                    for (Course co : courses)
-                        System.out.println(co.getCourseCode() + " | " + co.getTitle() + " | " + co.getEnrolledCount() + "/" + co.getCapacity());
+                    for (Course c : courses) {
+                        System.out.println(c.getCode() + " - " + c.getName());
+                    }
                     break;
 
                 case 6:
-                    System.out.print("Student ID: ");
-                    sid = sc.nextLine();
-                    if (!enroll.containsKey(sid)) {
-                        System.out.println("No Courses.");
-                        break;
+                    for (Student s : students) {
+                        System.out.println(s.getName());
+
+                        ArrayList<String> list = enrollments.get(s.getId());
+
+                        if (list.size() == 0) {
+                            System.out.println("No Courses");
+                        } else {
+                            for (String x : list) {
+                                System.out.println(x);
+                            }
+                        }
+
+                        System.out.println();
                     }
-                    int total = 0;
-                    for (String x : enroll.get(sid)) {
-                        Course co = findCourse(x);
-                        System.out.println(co.getCourseCode() + " - " + co.getTitle());
-                        total += co.getUnits();
-                    }
-                    System.out.println("Total Units: " + total);
                     break;
+
+                case 7:
+                    System.out.println("Goodbye");
+                    break;
+
+                default:
+                    System.out.println("Invalid Choice");
             }
-        } while (ch != 0);
 
-        System.out.println("Thank you!");
-    }
-
-    static Student findStudent(String id) {
-        for (Student s : students)
-            if (s.getStudentId().equals(id))
-                return s;
-        return null;
-    }
-
-    static Course findCourse(String code) {
-        for (Course c : courses)
-            if (c.getCourseCode().equals(code))
-                return c;
-        return null;
+        } while (choice != 7);
     }
 }
