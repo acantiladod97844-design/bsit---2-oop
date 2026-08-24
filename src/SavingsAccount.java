@@ -16,7 +16,7 @@ public class SavingsAccount extends Account {
     }
 
     @Override
-    public void withdraw(double amount) throws InsufficientFundsException {
+    public void withdraw(double amount) throws InsufficientResourcesException {
         if (amount <= 0) {
             throw new IllegalArgumentException("Withdrawal amount must be greater than zero.");
         }
@@ -24,7 +24,7 @@ public class SavingsAccount extends Account {
         double remaining = getBalance() - amount;
         if (remaining < MAINTAINING_BALANCE) {
             double shortfall = MAINTAINING_BALANCE - remaining;
-            throw new InsufficientFundsException(shortfall);
+            throw new InsufficientResourcesException(shortfall);
         }
         super.withdraw(amount);
     }

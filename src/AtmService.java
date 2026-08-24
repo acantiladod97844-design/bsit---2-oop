@@ -1,6 +1,4 @@
-package atm;
-
-public class ATMService<Account, Account> {
+public class AtmService<Account, Account> {
 
     public <Account, Account> void deposit(Account account, double amount) {
         account.deposit(amount);
