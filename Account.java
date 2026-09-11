@@ -1,55 +1,96 @@
-public class Account {
+import java.util.ArrayList;
+import java.util.Scanner;
 
-    // Fields are private for encapsulation
-    private String owner;
-    private double balance;
+public class Main {
 
-    // Constructor
-    public Account(String owner, double openingBalance) {
-        this.owner = owner;
+    public static void main(String[] args) {
 
-        // Only accept 0 or more
-        if (openingBalance < 0) {
-            this.balance = 0;
-        } else {
-            this.balance = openingBalance;
+        // One list holds Cars AND Motorcycles
+        ArrayList<Vehicle> vehicles = new ArrayList<>();
+
+        Scanner input = new Scanner(System.in);
+        int choice = 0;
+
+        while (choice != 5) {
+
+            System.out.println();
+            System.out.println("===== VEHICLE MANAGER =====");
+            System.out.println("1 - Add Car");
+            System.out.println("2 - Add Motorcycle");
+            System.out.println("3 - Remove a Vehicle");
+            System.out.println("4 - Display All Vehicles");
+            System.out.println("5 - Exit");
+            System.out.print("Choose an option: ");
+
+            choice = input.nextInt();
+            input.nextLine();
+
+            if (choice == 1) {
+
+                System.out.print("Brand: ");
+                String brand = input.nextLine();
+
+                System.out.print("Year: ");
+                int year = input.nextInt();
+
+                System.out.print("Number of doors: ");
+                int doors = input.nextInt();
+
+                // TODO 7 completed
+                vehicles.add(new Car(brand, year, doors));
+
+                System.out.println(">> Car added!");
+
+            } else if (choice == 2) {
+
+                System.out.print("Brand: ");
+                String brand = input.nextLine();
+
+                System.out.print("Year: ");
+                int year = input.nextInt();
+
+                System.out.print("Has sidecar? (true/false): ");
+                boolean sidecar = input.nextBoolean();
+
+                // TODO 8 completed
+                vehicles.add(new Motorcycle(brand, year, sidecar));
+
+                System.out.println(">> Motorcycle added!");
+
+            } else if (choice == 3) {
+
+                System.out.print("Enter the number to remove: ");
+                int number = input.nextInt();
+
+                // TODO 9 completed
+                if (number >= 1 && number <= vehicles.size()) {
+                    vehicles.remove(number - 1);
+                    System.out.println(">> Removed!");
+                } else {
+                    System.out.println(">> Invalid number.");
+                }
+
+            } else if (choice == 4) {
+
+                System.out.println("--- All Vehicles ---");
+
+                if (vehicles.isEmpty()) {
+                    System.out.println("(none yet)");
+                }
+
+                // TODO 10 completed
+                for (int i = 0; i < vehicles.size(); i++) {
+                    System.out.print((i + 1) + ". ");
+                    vehicles.get(i).displayInfo();
+                }
+
+            } else if (choice != 5) {
+
+                System.out.println(">> Invalid option.");
+            }
         }
-    }
 
-    // Getter for owner
-    public String getOwner() {
-        return owner;
-    }
-
-    // Getter for balance
-    public double getBalance() {
-        return balance;
-    }
-
-    // Deposit money
-    public void deposit(double amount) {
-        if (amount <= 0) {
-            System.out.println("Invalid amount.");
-            return;
-        }
-
-        balance += amount;
-        System.out.println("Deposited " + amount + ". New balance: " + balance);
-    }
-
-    // Withdraw money
-    public void withdraw(double amount) {
-        if (amount <= 0) {
-            System.out.println("Invalid amount.");
-            return;
-        }
-
-        if (amount > balance) {
-            System.out.println("Insufficient funds.");
-            return;
-        }
-
-        balance -= amount;
-        System.out.println("Withdrawn " + amount + ". New balance: " + balance);
+        System.out.println("Goodbye!");
+        input.close();
     }
 }
